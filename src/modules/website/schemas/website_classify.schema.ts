@@ -6,10 +6,13 @@
  */
 import * as mongoose from 'mongoose';
 
-const WebsiteClassifySchema = new mongoose.Schema({
-  name: String,
-  value: String,
-  create_time: Date,
-});
+const WebsiteClassifySchema = new mongoose.Schema(
+  {
+    name: String,
+    value: String,
+    create_time: Date,
+  },
+  { versionKey: false },
+);
 
 export default WebsiteClassifySchema;

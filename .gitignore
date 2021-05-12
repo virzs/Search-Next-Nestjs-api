@@ -29,6 +29,9 @@ lerna-debug.log*
 # history
 /.history
 
+# env
+development.env
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
