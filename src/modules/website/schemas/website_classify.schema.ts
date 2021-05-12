@@ -2,15 +2,16 @@
  * @Author: Vir
  * @Date: 2021-05-10 22:17:56
  * @Last Modified by: Vir
- * @Last Modified time: 2021-05-10 22:20:11
+ * @Last Modified time: 2021-05-12 14:08:21
  */
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
+import baseSchema from 'src/common/schemas/base.schema';
 
-const WebsiteClassifySchema = new mongoose.Schema(
+const WebsiteClassifySchema = new Schema(
   {
     name: String,
     value: String,
-    create_time: Date,
+    ...baseSchema,
   },
   { versionKey: false },
 );
