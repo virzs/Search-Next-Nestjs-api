@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import WebsiteMainModule from './modules/website/index.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
+import { ResourceModule } from './modules/resource/index.module';
 
 @Module({
   imports: [
@@ -20,14 +21,13 @@ import databaseConfig from './config/database.config';
       //加载变量
       load: [databaseConfig],
     }),
+    // 数据库配置
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => {
-        console.log(config.get('MongoConfig'));
-        return config.get('MongoConfig');
-      },
+      useFactory: (config: ConfigService) => config.get('MongoConfig'),
       inject: [ConfigService],
     }),
+    ResourceModule,
     WebsiteMainModule,
   ],
   controllers: [AppController],
