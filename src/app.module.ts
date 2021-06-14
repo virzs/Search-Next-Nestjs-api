@@ -6,6 +6,7 @@ import WebsiteMainModule from './modules/website/index.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import { ResourceModule } from './modules/resource/index.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -27,6 +28,8 @@ import { ResourceModule } from './modules/resource/index.module';
       useFactory: (config: ConfigService) => config.get('MongoConfig'),
       inject: [ConfigService],
     }),
+    // 定时任务
+    ScheduleModule.forRoot(),
     ResourceModule,
     WebsiteMainModule,
   ],

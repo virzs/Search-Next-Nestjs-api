@@ -34,8 +34,8 @@ async function bootstrap() {
   // 过滤处理 HTTP 异常
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(3000);
+  await app.listen(3100);
 
-  Logger.info(`http://localhost:${3000}`, '服务启动成功');
+  Logger.info(`http://localhost:${3100}`, '服务启动成功');
 }
 bootstrap();
