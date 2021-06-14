@@ -2,14 +2,15 @@
  * @Author: Vir
  * @Date: 2021-06-11 13:37:07
  * @Last Modified by: Vir
- * @Last Modified time: 2021-06-14 20:55:21
+ * @Last Modified time: 2021-06-14 22:51:04
  */
 
 import { HttpService, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Cron } from '@nestjs/schedule';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import { Logger } from 'src/utils/log4';
+import { BingPageDto, BingRandomDto } from '../dtos/bing.dto';
 
 @Injectable()
 export class BingService {
@@ -18,7 +19,8 @@ export class BingService {
     @InjectModel('BingImg') private readonly model: Model<any>,
   ) {}
 
-  @Cron('10 * * * * *')
+  // 获取必应壁纸，每8小时自动获取
+  @Cron(CronExpression.EVERY_8_HOURS)
   async getImgToDB() {
     const response = await this.httpRequest
       .get('https://cn.bing.com/HPImageArchive.aspx', {
@@ -45,7 +47,7 @@ export class BingService {
     Logger.info('调用定时任务 bing image api');
   }
 
-  async list(query: any) {
+  async page(query: BingPageDto) {
     const size = Number(query.size) || 10;
     const page = Number(query.page) || 1;
     const total = await this.model.count();
@@ -67,5 +69,11 @@ export class BingService {
       size,
       page,
     };
+  }
+
+  async random(query: BingRandomDto) {
+    const size = Number(query.size) || 10;
+    const response = await this.model.aggregate([{ $sample: { size } }]);
+    return response;
   }
 }
