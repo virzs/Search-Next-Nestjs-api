@@ -72,8 +72,19 @@ export class BingService {
   }
 
   async random(query: BingRandomDto) {
-    const size = Number(query.size) || 10;
+    const size = Number(query.size) || 4;
+    const hsh = query.hsh;
+    let results = [];
     const response = await this.model.aggregate([{ $sample: { size } }]);
-    return response;
+    if (hsh) {
+      const has = response.find(i => i.hsh === hsh);
+      if (!has) {
+        const img = await this.model.findOne({ hsh });
+        if (img) results = response.splice(0, 1, img);
+      }
+    }
+    results = response;
+
+    return results;
   }
 }
