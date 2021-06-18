@@ -33,6 +33,9 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
   // 过滤处理 HTTP 异常
   app.useGlobalFilters(new HttpExceptionFilter());
+  // 配置跨域
+  // TODO 打包后指定ip访问
+  app.enableCors();
 
   await app.listen(3100);
 
