@@ -20,7 +20,7 @@ export class BingService {
   ) {}
 
   // 获取必应壁纸，每8小时自动获取
-  @Cron(CronExpression.EVERY_8_HOURS)
+  @Cron(CronExpression.EVERY_4_HOURS)
   async getImgToDB() {
     const response = await this.httpRequest
       .get('https://cn.bing.com/HPImageArchive.aspx', {
@@ -34,7 +34,7 @@ export class BingService {
       .toPromise();
     const img = response.data.images[0];
     if (!img) return;
-    const has = await this.model.findOne({ hsh: img.hsh });
+    const has = await this.model.findOne({ startdate: img.startdate });
     const baseUrl = 'https://cn.bing.com';
     if (!has) {
       this.model.create({
