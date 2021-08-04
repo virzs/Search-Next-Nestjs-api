@@ -1,0 +1,17 @@
+/*
+ * @Author: Vir
+ * @Date: 2021-08-03 11:20:04
+ * @Last Modified by: Vir
+ * @Last Modified time: 2021-08-03 11:25:59
+ */
+
+import { IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
+
+export class BaiduSugDto {
+  @ApiProperty({ description: 'wd' })
+  @IsNotEmpty({ message: '搜索内容不能为空' })
+  @Expose()
+  wd: string;
+}
