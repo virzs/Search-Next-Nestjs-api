@@ -3,12 +3,34 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import WebsiteMainModule from './modules/website/index.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import databaseConfig from './config/database.config';
+import { ResourceModule } from './modules/resource/index.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb://search_owner:owner112611@47.100.53.121:27017/search',
-    ),
+    ConfigModule.forRoot({
+      //env文件路径
+      envFilePath: ['development.env'],
+      //是否忽略env文件
+      ignoreEnvFile: false,
+      //是否忽略env变量
+      ignoreEnvVars: false,
+      //是否全局
+      isGlobal: true,
+      //加载变量
+      load: [databaseConfig],
+    }),
+    // 数据库配置
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => config.get('MongoConfig'),
+      inject: [ConfigService],
+    }),
+    // 定时任务
+    ScheduleModule.forRoot(),
+    ResourceModule,
     WebsiteMainModule,
   ],
   controllers: [AppController],
