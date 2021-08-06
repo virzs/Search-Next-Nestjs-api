@@ -7,6 +7,12 @@
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
 
+## Search Next 后端项目
+
+[Search Next](https://github.com/virzs/Search-Next)
+
+具体详见Search Next项目
+
 ## Installation
 
 ```bash
