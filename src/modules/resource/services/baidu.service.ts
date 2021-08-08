@@ -29,11 +29,13 @@ export class BaiduService {
           name: '百度',
           value: 'baidu',
         },
-        sugs: results.g.map(i => ({
-          sa: i.sa,
-          type: i.type,
-          content: i.q,
-        })),
+        sugs: results.g
+          ? results.g.map(i => ({
+              sa: i.sa,
+              type: i.type,
+              content: i.q,
+            }))
+          : [],
       };
       return newResults;
     }
