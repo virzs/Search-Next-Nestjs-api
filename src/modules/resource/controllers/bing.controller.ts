@@ -7,7 +7,7 @@
 
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { BingPageDto, BingRandomDto } from '../dtos/bing.dto';
+import { BingPageDto, BingRandomDto, BingSugDto } from '../dtos/bing.dto';
 import { BingService } from '../services/bing.service';
 
 @ApiTags('资源/必应')
@@ -25,5 +25,11 @@ export class BingController {
   @ApiOperation({ summary: '获取随机壁纸列表' })
   random(@Query() query: BingRandomDto) {
     return this.service.random(query);
+  }
+
+  @Get('/sug')
+  @ApiOperation({ summary: '获取搜索提示词' })
+  sug(@Query() query: BingSugDto) {
+    return this.service.sug(query);
   }
 }

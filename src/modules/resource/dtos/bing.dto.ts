@@ -5,7 +5,7 @@
  * @Last Modified time: 2021-06-14 22:57:54
  */
 
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsNumberString, IsOptional, IsString } from 'class-validator';
 
@@ -35,4 +35,10 @@ export class BingRandomDto {
   @IsOptional()
   @Expose()
   hsh: string;
+}
+
+export class BingSugDto {
+  @ApiProperty({ description: '搜索内容' })
+  @Expose()
+  wd: string;
 }

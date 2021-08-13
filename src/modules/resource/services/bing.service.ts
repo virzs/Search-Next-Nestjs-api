@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import { Logger } from 'src/utils/log4';
-import { BingPageDto, BingRandomDto } from '../dtos/bing.dto';
+import { BingPageDto, BingRandomDto, BingSugDto } from '../dtos/bing.dto';
 
 @Injectable()
 export class BingService {
@@ -86,5 +86,34 @@ export class BingService {
     results = response;
 
     return results;
+  }
+
+  async sug(query: BingSugDto) {
+    const response = await this.httpRequest
+      .get('http://api.bing.com/qsonhs.aspx', {
+        params: {
+          q: query.wd,
+        },
+      })
+      .toPromise();
+    if (response.data) {
+      const result = response.data.AS.Results[0].Suggests;
+      const newResults = {
+        wd: query.wd,
+        engine: {
+          label: '百度',
+          value: 'bing',
+        },
+        sugs: result
+          ? result.map(i => ({
+              sa: i.SK,
+              type: 'sug',
+              content: i.Txt,
+            }))
+          : [],
+      };
+      return newResults;
+    }
+    return response.data;
   }
 }
