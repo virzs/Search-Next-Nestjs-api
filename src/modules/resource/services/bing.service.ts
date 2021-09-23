@@ -19,7 +19,7 @@ export class BingService {
     @InjectModel('BingImg') private readonly model: Model<any>,
   ) {}
 
-  // 获取必应壁纸，每8小时自动获取
+  // 获取必应壁纸，每4小时自动获取
   @Cron(CronExpression.EVERY_4_HOURS)
   async getImgToDB() {
     const response = await this.httpRequest
@@ -88,6 +88,15 @@ export class BingService {
     return results;
   }
 
+  async latest() {
+    const response = await this.model
+      .find({})
+      .sort({ _id: -1 })
+      .limit(1);
+
+    return response;
+  }
+
   async sug(query: BingSugDto) {
     const response = await this.httpRequest
       .get('http://api.bing.com/qsonhs.aspx', {
@@ -101,7 +110,7 @@ export class BingService {
       const newResults = {
         wd: query.wd,
         engine: {
-          label: '百度',
+          label: '必应',
           value: 'bing',
         },
         sugs: result

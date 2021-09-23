@@ -27,6 +27,12 @@ export class BingController {
     return this.service.random(query);
   }
 
+  @Get('/latest')
+  @ApiOperation({ summary: '获取最新的壁纸' })
+  latest() {
+    return this.service.latest();
+  }
+
   @Get('/sug')
   @ApiOperation({ summary: '获取搜索提示词' })
   sug(@Query() query: BingSugDto) {
