@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import { Logger } from 'src/utils/log4';
-import { BingPageDto, BingRandomDto } from '../dtos/bing.dto';
+import { BingPageDto, BingRandomDto, BingSugDto } from '../dtos/bing.dto';
 
 @Injectable()
 export class BingService {
@@ -19,7 +19,7 @@ export class BingService {
     @InjectModel('BingImg') private readonly model: Model<any>,
   ) {}
 
-  // 获取必应壁纸，每8小时自动获取
+  // 获取必应壁纸，每4小时自动获取
   @Cron(CronExpression.EVERY_4_HOURS)
   async getImgToDB() {
     const response = await this.httpRequest
@@ -86,5 +86,43 @@ export class BingService {
     results = response;
 
     return results;
+  }
+
+  async latest() {
+    const response = await this.model
+      .find({})
+      .sort({ _id: -1 })
+      .limit(1);
+
+    return response;
+  }
+
+  async sug(query: BingSugDto) {
+    const response = await this.httpRequest
+      .get('http://api.bing.com/qsonhs.aspx', {
+        params: {
+          q: query.wd,
+        },
+      })
+      .toPromise();
+    if (response.data) {
+      const result = response.data.AS.Results[0].Suggests;
+      const newResults = {
+        wd: query.wd,
+        engine: {
+          label: '必应',
+          value: 'bing',
+        },
+        sugs: result
+          ? result.map(i => ({
+              sa: i.SK,
+              type: 'sug',
+              content: i.Txt,
+            }))
+          : [],
+      };
+      return newResults;
+    }
+    return response.data;
   }
 }
