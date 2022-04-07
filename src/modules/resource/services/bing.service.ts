@@ -20,7 +20,7 @@ export class BingService {
   ) {}
 
   // 获取必应壁纸，每4小时自动获取
-  @Cron(CronExpression.EVERY_4_HOURS)
+  @Cron(CronExpression.EVERY_4_HOURS, { name: 'bing-wallpaper' })
   async getImgToDB() {
     const response = await this.httpRequest
       .get('https://cn.bing.com/HPImageArchive.aspx', {
