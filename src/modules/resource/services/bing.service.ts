@@ -7,8 +7,7 @@
 
 import { HttpService, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import dayjs from 'dayjs';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Model } from 'mongoose';
 import { Logger } from 'src/utils/log4';
 import { BingPageDto, BingRandomDto, BingSugDto } from '../dtos/bing.dto';
@@ -17,7 +16,6 @@ import { BingPageDto, BingRandomDto, BingSugDto } from '../dtos/bing.dto';
 export class BingService {
   constructor(
     private readonly httpRequest: HttpService,
-    private schedulerRegistry: SchedulerRegistry,
     @InjectModel('BingImg') private readonly model: Model<any>,
   ) {}
 
@@ -36,7 +34,6 @@ export class BingService {
       .toPromise();
     const img = response.data.images[0];
     if (!img) return;
-    const cron = this.schedulerRegistry.getCronJob('bing-wallpaper');
     const has = await this.model.findOne({ startdate: img.startdate });
     const baseUrl = 'https://cn.bing.com';
     if (!has) {
@@ -48,14 +45,6 @@ export class BingService {
       });
     }
     Logger.info('调用定时任务 bing image api');
-    // 停止定时任务
-    cron.stop();
-    cron.setTime(
-      dayjs()
-        .startOf('day')
-        .add(1, 'day')
-        .toDate(),
-    );
   }
 
   async page(query: BingPageDto) {
