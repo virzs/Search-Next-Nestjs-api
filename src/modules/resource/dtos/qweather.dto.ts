@@ -7,7 +7,7 @@
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 // 和风天气 实时天气
 export class QWeatherNowDto {
@@ -20,6 +20,7 @@ export class QWeatherNowDto {
   @ApiPropertyOptional({ description: '位置' })
   @IsString()
   @Expose()
+  @IsNotEmpty()
   location: string;
 
   @ApiPropertyOptional({ description: '语言' })
