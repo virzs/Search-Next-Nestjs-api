@@ -1,5 +1,5 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { QWeatherNowDto } from '../dtos/qweather.dto';
+import { GeoLocationDto, QWeatherNowDto } from '../dtos/qweather.dto';
 
 const codeMap = {
   '400': '请求错误，请检查请求参数',
@@ -29,6 +29,32 @@ export class QWeatherService {
       updateTime,
       fxLink,
       now,
+      refer,
+    };
+
+    if (code) {
+      if (code === '200') {
+        return data;
+      } else {
+        return { code, message: codeMap[code] };
+      }
+    }
+
+    return result.data;
+  }
+
+  async city(query: GeoLocationDto) {
+    const { key, ...rest } = query;
+    const result = await this.httpRequest
+      .get('https://geoapi.qweather.com/v2/city/lookup', {
+        params: { key: key ? key : process.env.qweather_key, ...rest },
+      })
+      .toPromise();
+
+    const { code, refer, location } = result.data;
+
+    const data = {
+      location,
       refer,
     };
 

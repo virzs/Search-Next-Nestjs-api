@@ -7,7 +7,7 @@
 
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { QWeatherNowDto } from '../dtos/qweather.dto';
+import { QWeatherNowDto, GeoLocationDto } from '../dtos/qweather.dto';
 import { QWeatherService } from '../services/qweather.service';
 
 @ApiTags('资源/和风天气')
@@ -19,5 +19,11 @@ export class QWeatherController {
   @ApiOperation({ summary: '获取实时天气' })
   now(@Query() query: QWeatherNowDto) {
     return this.service.now(query);
+  }
+
+  @Get('/city')
+  @ApiOperation({ summary: '获取城市信息' })
+  city(@Query() query: GeoLocationDto) {
+    return this.service.city(query);
   }
 }
