@@ -7,6 +7,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.fillter';
 import { AllExceptionsFilter } from './common/filters/any-exception.fillter';
 import { DefaultDTOValidationPipe } from './common/pipes/defaultDTOValidation.pipe';
 import { logger } from './common/middleware/logger.middleware';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -34,8 +35,10 @@ async function bootstrap() {
   // 过滤处理 HTTP 异常
   app.useGlobalFilters(new HttpExceptionFilter());
   // 配置跨域
-  // TODO 打包后指定ip访问
   app.enableCors();
+  // TODO 打包后指定ip访问
+  //防止跨站脚本攻击
+  app.use(helmet());
 
   await app.listen(3100);
 
